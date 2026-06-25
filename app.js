@@ -81,12 +81,15 @@ function applyData() {
   const gallery = document.getElementById("galleryGrid");
   gallery.innerHTML = captions.map((caption, i) => `<figure class="photo-card" style="${data.photos[i] ? `background-image:linear-gradient(180deg,transparent,rgba(39,20,22,.58)),url('${data.photos[i]}')` : ""}"><span>${caption}</span></figure>`).join("");
 
-  const mapQuery = encodeURIComponent(`${data.venue} ${data.address}`);
-  document.getElementById("mapLink").href = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
+    const mapQuery = encodeURIComponent(`${data.venue} ${data.address}`);
+  const mapLink = document.getElementById("mapLink");
+  mapLink.href = `https://www.google.com/maps/dir/?api=1&destination=${mapQuery}`;
+  mapLink.textContent = "Get Directions";
   document.getElementById("mapFrame").src = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
 
   const phone = data.whatsapp.replace(/[^0-9]/g, "");
-  const message = encodeURIComponent(`I am confirming my RSVP for ${couple}'s wedding at ${data.venue} on ${data.dateText}.`);
+  const websiteLink = "https://jayasimha45.github.io/wedding-wed/";
+  const message = encodeURIComponent(`You are invited to ${couple}'s wedding at ${data.venue} on ${data.dateText}. Open the wedding website: ${websiteLink}`);
   document.getElementById("whatsappLink").href = `https://wa.me/${phone}?text=${message}`;
   document.getElementById("callLink").href = `tel:${(data.groomPhone || data.bridePhone).replace(/\s/g, "")}`;
 }
@@ -179,3 +182,4 @@ fillEditor();
 applyData();
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
