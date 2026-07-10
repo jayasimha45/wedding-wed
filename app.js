@@ -26,7 +26,9 @@
   ],
   photos: ["", "", "", "", ""],
   music: "",
-  musicName: ""
+  musicName: "",
+  groomPhoto: "",
+  bridePhoto: ""
 };
 
 const storeKey = "editableWeddingInvitation";
@@ -41,7 +43,9 @@ function merge(base, saved) {
     family: base.family.map((row, i) => saved.family?.[i] || row),
     photos: base.photos.map((photo, i) => saved.photos?.[i] || photo),
     music: saved.music || base.music,
-    musicName: saved.musicName || base.musicName
+    musicName: saved.musicName || base.musicName,
+    groomPhoto: saved.groomPhoto || base.groomPhoto,
+    bridePhoto: saved.bridePhoto || base.bridePhoto
   };
 }
 
@@ -74,6 +78,9 @@ function applyData() {
   text("venueTitle", data.venue);
   text("addressText", data.address);
   text("footerText", `With love, ${couple} and their families`);
+  text("groomPhotoName", data.groom);
+  text("bridePhotoName", data.bride);
+  applyCouplePhotos();
 
   const eventGrid = document.getElementById("eventGrid");
   eventGrid.innerHTML = data.events.map((event, i) => `<article class="event-card ${i === 4 ? "featured" : ""}"><span>${event[0]}</span><h3>${event[1]}</h3><p>${event[2]}</p><p>${event[3]}</p></article>`).join("");
@@ -97,6 +104,28 @@ function applyData() {
   document.getElementById("whatsappLink").href = `https://wa.me/${phone}?text=${message}`;
   document.getElementById("callLink").href = `tel:${(data.groomPhone || data.bridePhone).replace(/\s/g, "")}`;
   applyMusic();
+}
+
+function applyCouplePhotos() {
+  const groomPortrait = document.getElementById("groomPortrait");
+  const bridePortrait = document.getElementById("bridePortrait");
+  const groomPhoto = document.getElementById("groomPhoto");
+  const bridePhoto = document.getElementById("bridePhoto");
+  if (data.groomPhoto) {
+    groomPhoto.src = data.groomPhoto;
+    groomPortrait.classList.remove("hidden");
+  } else {
+    groomPhoto.removeAttribute("src");
+    groomPortrait.classList.add("hidden");
+  }
+  if (data.bridePhoto) {
+    bridePhoto.src = data.bridePhoto;
+    bridePortrait.classList.remove("hidden");
+  } else {
+    bridePhoto.removeAttribute("src");
+    bridePortrait.classList.add("hidden");
+  }
+  document.getElementById("couplePortraits").classList.toggle("empty", !data.groomPhoto && !data.bridePhoto);
 }
 
 function applyMusic() {
@@ -165,6 +194,42 @@ document.getElementById("customForm").addEventListener("submit", (event) => {
   applyData();
   updateCountdown();
   document.getElementById("saveNote").textContent = "Saved. The invitation is updated on this browser.";
+});
+
+function readImageUpload(input, callback) {
+  const file = input.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => callback(String(reader.result));
+  reader.readAsDataURL(file);
+}
+
+document.getElementById("groomPhotoUpload").addEventListener("change", (event) => {
+  readImageUpload(event.target, (image) => {
+    data.groomPhoto = image;
+    save();
+    applyCouplePhotos();
+    document.getElementById("saveNote").textContent = "Groom photo added near the names.";
+  });
+});
+
+document.getElementById("bridePhotoUpload").addEventListener("change", (event) => {
+  readImageUpload(event.target, (image) => {
+    data.bridePhoto = image;
+    save();
+    applyCouplePhotos();
+    document.getElementById("saveNote").textContent = "Bride photo added near the names.";
+  });
+});
+
+document.getElementById("removeCouplePhotos").addEventListener("click", () => {
+  data.groomPhoto = "";
+  data.bridePhoto = "";
+  save();
+  applyCouplePhotos();
+  document.getElementById("groomPhotoUpload").value = "";
+  document.getElementById("bridePhotoUpload").value = "";
+  document.getElementById("saveNote").textContent = "Couple photos removed.";
 });
 
 document.getElementById("musicUpload").addEventListener("change", (event) => {
@@ -240,6 +305,7 @@ fillEditor();
 applyData();
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
 
 
 
