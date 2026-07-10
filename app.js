@@ -308,9 +308,11 @@ function quickShareData() {
   };
 }
 
+const publicWeddingSite = "https://jayasimha45.github.io/wedding-wed/";
+
 function makeQuickShareLink() {
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(quickShareData()))));
-  return `${location.origin}${location.pathname}?invite=${encodeURIComponent(encoded)}`;
+  return `${publicWeddingSite}?invite=${encodeURIComponent(encoded)}`;
 }
 
 function loadQuickShareFromUrl() {
