@@ -1,4 +1,4 @@
-﻿const defaults = {
+const defaults = {
   bride: "Meera",
   groom: "Aarav",
   dateTime: "2026-12-14T10:30",
@@ -297,14 +297,69 @@ document.getElementById("rsvpForm").addEventListener("submit", (event) => {
   event.currentTarget.reset();
 });
 
+function quickShareData() {
+  return {
+    ...data,
+    bridePhoto: "",
+    groomPhoto: "",
+    photos: [],
+    music: "",
+    musicName: ""
+  };
+}
+
+function makeQuickShareLink() {
+  const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(quickShareData()))));
+  return `${location.origin}${location.pathname}?invite=${encodeURIComponent(encoded)}`;
+}
+
+function loadQuickShareFromUrl() {
+  const invite = new URLSearchParams(location.search).get("invite");
+  if (!invite) return;
+  try {
+    data = merge(defaults, JSON.parse(decodeURIComponent(escape(atob(invite)))));
+    save();
+  } catch (error) {
+    document.getElementById("saveNote").textContent = "This shared invitation link could not be loaded.";
+  }
+}
+
+const copyShareButton = document.getElementById("copyShareLink");
+const onlineStatus = document.getElementById("onlineStatus");
+copyShareButton?.addEventListener("click", async () => {
+  const link = makeQuickShareLink();
+  try {
+    await navigator.clipboard.writeText(link);
+    if (onlineStatus) onlineStatus.textContent = "Share link copied. Send it to family and friends.";
+  } catch (error) {
+    if (onlineStatus) onlineStatus.textContent = link;
+  }
+});
+
 function openCard(){ const opening = document.getElementById("opening"); if(opening.classList.contains("opening-now")) return; opening.classList.add("opening-now"); document.getElementById("openCard").textContent = "Opening..."; setTimeout(() => { opening.classList.add("hidden"); document.body.classList.remove("locked"); }, 3100); }
 document.getElementById("openCard").addEventListener("click", (event) => { event.stopPropagation(); openCard(); });
 document.getElementById("opening").addEventListener("click", openCard);
 
+window.weddingApp = {
+  getData: () => data,
+  setData: (newData) => {
+    data = merge(defaults, newData || {});
+    save();
+    fillEditor();
+    applyData();
+    updateCountdown();
+  },
+  saveLocal: save,
+  applyData,
+  updateCountdown
+};
+
+loadQuickShareFromUrl();
 fillEditor();
 applyData();
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
 
 
 
