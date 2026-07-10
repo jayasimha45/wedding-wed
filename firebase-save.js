@@ -19,7 +19,6 @@ const provider = new GoogleAuthProvider();
 
 const signInButton = document.getElementById("googleSignIn");
 const saveButton = document.getElementById("saveOnline");
-const copyButton = document.getElementById("copyShareLink");
 const statusText = document.getElementById("onlineStatus");
 let currentUser = null;
 let currentShareLink = "";
@@ -48,13 +47,15 @@ function textShareData() {
   };
 }
 
+const publicWeddingSite = "https://jayasimha45.github.io/wedding-wed/";
+
 function shareLinkFor(uid) {
-  return `${location.origin}${location.pathname}?wedding=${encodeURIComponent(uid)}`;
+  return `${publicWeddingSite}?wedding=${encodeURIComponent(uid)}`;
 }
 
 function quickShareLink() {
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(textShareData()))));
-  return `${location.origin}${location.pathname}?invite=${encodeURIComponent(encoded)}`;
+  return `${publicWeddingSite}?invite=${encodeURIComponent(encoded)}`;
 }
 
 function loadQuickInvitation() {
@@ -125,16 +126,6 @@ saveButton?.addEventListener("click", async () => {
   }
 });
 
-copyButton?.addEventListener("click", async () => {
-  const link = currentUser && currentShareLink.includes("?wedding=") ? currentShareLink : quickShareLink();
-  currentShareLink = link;
-  try {
-    await navigator.clipboard.writeText(link);
-    setStatus("Share link copied. Send it to family and friends.");
-  } catch (error) {
-    setStatus(link);
-  }
-});
 
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
