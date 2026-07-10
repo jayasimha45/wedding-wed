@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=2" />
+  <link rel="stylesheet" href="styles.css?v=4" />
 </head>
 <body class="locked">
   <section class="opening" id="opening">
@@ -17,7 +17,7 @@
       <img src="assets/ganesh-welcome.png" alt="Lord Ganesh welcome" />
       <p class="eyebrow">Auspicious beginning</p>
       <h1>Shree Ganeshaya Namah</h1>
-      <p>Tap once to open the wedding card with blessings and music.</p>
+      <p>Tap once to open the wedding card with blessings.</p>
       <button class="gold-btn" id="openCard">Open Wedding Card</button>
     </div>
   </section>
@@ -48,6 +48,11 @@
       <div id="familyEditor" class="mini-list"></div>
       <h3>Own photos</h3>
       <div id="photoEditor" class="photo-inputs"></div>
+      <h3>Optional music</h3>
+      <div class="music-upload">
+        <label>Upload song<input id="musicUpload" type="file" accept="audio/*" /></label>
+        <button class="plain-btn" id="removeMusic" type="button">Remove music</button>
+      </div>
       <div class="custom-actions">
         <button class="gold-btn" type="submit">Apply Changes</button>
         <button class="plain-btn" id="resetBtn" type="button">Reset</button>
@@ -128,12 +133,20 @@
       <p id="rsvpNote"></p>
     </section>
   </main>
+<aside class="music-player hidden" id="musicPlayer" aria-label="Wedding music player">
+    <button id="musicToggle" type="button" aria-label="Play uploaded music"><span></span></button>
+    <div><strong id="musicTitle">Wedding music</strong><small id="musicStatus">Song added</small></div>
+    <audio id="weddingAudio" preload="auto"></audio>
+  </aside>
 
-  <aside class="music"><button id="musicToggle" aria-label="Play music"><span></span></button><div><strong>Wedding song</strong><small id="musicStatus">Tap to play</small></div></aside>
   <footer><p class="eyebrow">Thank you</p><h2>We look forward to celebrating with you</h2><p id="footerText"></p></footer>
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
+
+
+
+
 
 
 
