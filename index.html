@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="stylesheet" href="styles.css?v=5" />
 </head>
 <body class="locked">
   <section class="opening" id="opening">
@@ -46,6 +46,12 @@
       <div id="eventEditor" class="mini-list"></div>
       <h3>Family names</h3>
       <div id="familyEditor" class="mini-list"></div>
+      <h3>Couple photos</h3>
+      <div class="couple-photo-upload">
+        <label>Groom photo<input id="groomPhotoUpload" type="file" accept="image/*" /></label>
+        <label>Bride photo<input id="bridePhotoUpload" type="file" accept="image/*" /></label>
+        <button class="plain-btn" id="removeCouplePhotos" type="button">Remove couple photos</button>
+      </div>
       <h3>Own photos</h3>
       <div id="photoEditor" class="photo-inputs"></div>
       <h3>Optional music</h3>
@@ -71,6 +77,11 @@
       <div class="hero-content">
         <p class="eyebrow">Together with their families</p>
         <p class="mantra">Shree Venkateswara Swamy blessings</p>
+        <div class="couple-portraits" id="couplePortraits" aria-label="Bride and groom photos">
+          <figure class="portrait-card hidden" id="groomPortrait"><img id="groomPhoto" alt="Groom photo" /><figcaption id="groomPhotoName">Aarav</figcaption></figure>
+          <span class="portrait-amp">&</span>
+          <figure class="portrait-card hidden" id="bridePortrait"><img id="bridePhoto" alt="Bride photo" /><figcaption id="bridePhotoName">Meera</figcaption></figure>
+        </div>
         <h2><span id="groomName">Aarav</span><em>&</em><span id="brideName">Meera</span></h2>
         <p id="heroLine">Request your presence as they begin a new life together.</p>
         <div class="date-pill"><strong id="dateText">14 December 2026</strong><span id="venueText">The Royal Orchid Garden</span></div>
@@ -140,9 +151,10 @@
   </aside>
 
   <footer><p class="eyebrow">Thank you</p><h2>We look forward to celebrating with you</h2><p id="footerText"></p></footer>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>
+
 
 
 
