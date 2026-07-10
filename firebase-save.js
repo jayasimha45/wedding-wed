@@ -23,6 +23,7 @@ const copyButton = document.getElementById("copyShareLink");
 const statusText = document.getElementById("onlineStatus");
 let currentUser = null;
 let currentShareLink = "";
+const isFilePreview = location.protocol === "file:";
 
 function setStatus(message) {
   if (statusText) statusText.textContent = message;
@@ -88,10 +89,18 @@ async function loadSharedInvitation() {
 }
 
 signInButton?.addEventListener("click", async () => {
+  if (isFilePreview) {
+    setStatus("Google sign-in works only on the published website, not this local file. Use Copy share link here.");
+    return;
+  }
   try {
     await signInWithPopup(auth, provider);
   } catch (error) {
-    setStatus("Google sign-in did not finish. Try again.");
+    if (error?.code === "auth/unauthorized-domain") {
+      setStatus("Google sign-in is not allowed on this website domain yet. Use Copy share link.");
+      return;
+    }
+    setStatus("Google sign-in did not finish. Use Copy share link instead.");
   }
 });
 
@@ -119,12 +128,22 @@ saveButton?.addEventListener("click", async () => {
 copyButton?.addEventListener("click", async () => {
   const link = currentUser && currentShareLink.includes("?wedding=") ? currentShareLink : quickShareLink();
   currentShareLink = link;
-  await navigator.clipboard.writeText(link);
-  setStatus("Share link copied. Send it to family and friends.");
+  try {
+    await navigator.clipboard.writeText(link);
+    setStatus("Share link copied. Send it to family and friends.");
+  } catch (error) {
+    setStatus(link);
+  }
 });
 
 onAuthStateChanged(auth, (user) => {
   currentUser = user;
+  if (isFilePreview) {
+    saveButton.disabled = true;
+    signInButton.textContent = "Google sign-in needs published site";
+    setStatus("Local file preview: use Copy share link.");
+    return;
+  }
   if (!user) {
     saveButton.disabled = true;
     signInButton.textContent = "Sign in with Google";
