@@ -24,7 +24,9 @@
     ["Groom's Sibling", "Rhea Sharma"],
     ["Bride's Sibling", "Arjun Rao"]
   ],
-  photos: ["", "", "", "", ""]
+  photos: ["", "", "", "", ""],
+  music: "",
+  musicName: ""
 };
 
 const storeKey = "editableWeddingInvitation";
@@ -37,7 +39,9 @@ function merge(base, saved) {
     ...saved,
     events: base.events.map((row, i) => saved.events?.[i] || row),
     family: base.family.map((row, i) => saved.family?.[i] || row),
-    photos: base.photos.map((photo, i) => saved.photos?.[i] || photo)
+    photos: base.photos.map((photo, i) => saved.photos?.[i] || photo),
+    music: saved.music || base.music,
+    musicName: saved.musicName || base.musicName
   };
 }
 
@@ -92,6 +96,29 @@ function applyData() {
   const message = encodeURIComponent(`You are invited to ${couple}'s wedding at ${data.venue} on ${data.dateText}. Open the wedding website: ${websiteLink}`);
   document.getElementById("whatsappLink").href = `https://wa.me/${phone}?text=${message}`;
   document.getElementById("callLink").href = `tel:${(data.groomPhone || data.bridePhone).replace(/\s/g, "")}`;
+  applyMusic();
+}
+
+function applyMusic() {
+  const player = document.getElementById("musicPlayer");
+  const audio = document.getElementById("weddingAudio");
+  const title = document.getElementById("musicTitle");
+  const status = document.getElementById("musicStatus");
+  if (!player || !audio) return;
+
+  if (!data.music) {
+    audio.pause();
+    audio.removeAttribute("src");
+    player.classList.add("hidden");
+    player.classList.remove("playing");
+    if (status) status.textContent = "Song added";
+    return;
+  }
+
+  audio.src = data.music;
+  title.textContent = data.musicName || "Wedding music";
+  status.textContent = "Tap to play";
+  player.classList.remove("hidden");
 }
 
 function fillEditor() {
@@ -140,7 +167,46 @@ document.getElementById("customForm").addEventListener("submit", (event) => {
   document.getElementById("saveNote").textContent = "Saved. The invitation is updated on this browser.";
 });
 
-document.getElementById("photoEditor").addEventListener("change", (event) => {
+document.getElementById("musicUpload").addEventListener("change", (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    data.music = String(reader.result);
+    data.musicName = file.name;
+    save();
+    applyMusic();
+    document.getElementById("saveNote").textContent = "Music added. Guests can tap play if they want to hear it.";
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById("removeMusic").addEventListener("click", () => {
+  data.music = "";
+  data.musicName = "";
+  save();
+  applyMusic();
+  document.getElementById("musicUpload").value = "";
+  document.getElementById("saveNote").textContent = "Music removed. The invitation is silent again.";
+});
+
+const weddingAudio = document.getElementById("weddingAudio");
+const musicToggle = document.getElementById("musicToggle");
+musicToggle.addEventListener("click", () => {
+  if (!data.music) return;
+  if (weddingAudio.paused) weddingAudio.play();
+  else weddingAudio.pause();
+});
+weddingAudio.addEventListener("play", () => {
+  document.getElementById("musicPlayer").classList.add("playing");
+  document.getElementById("musicStatus").textContent = "Playing";
+});
+weddingAudio.addEventListener("pause", () => {
+  document.getElementById("musicPlayer").classList.remove("playing");
+  document.getElementById("musicStatus").textContent = "Tap to play";
+});
+
+ document.getElementById("photoEditor").addEventListener("change", (event) => {
   const input = event.target;
   if (!input.matches("input[type='file']") || !input.files[0]) return;
   const reader = new FileReader();
@@ -166,15 +232,7 @@ document.getElementById("rsvpForm").addEventListener("submit", (event) => {
   event.currentTarget.reset();
 });
 
-let audioContext, gainNode, timer, playing = false, note = 0;
-const melody = [196, 261.63, 293.66, 329.63, 392, 329.63, 293.66, 261.63];
-function setupAudio(){ if(audioContext) return; audioContext = new AudioContext(); gainNode = audioContext.createGain(); gainNode.gain.value = .55; gainNode.connect(audioContext.destination); }
-function playNote(){ const now = audioContext.currentTime; const osc = audioContext.createOscillator(); const gain = audioContext.createGain(); osc.type = "triangle"; osc.frequency.value = melody[note]; gain.gain.setValueAtTime(0, now); gain.gain.linearRampToValueAtTime(.075, now + .05); gain.gain.exponentialRampToValueAtTime(.001, now + 1.35); osc.connect(gain); gain.connect(gainNode); osc.start(now); osc.stop(now + 1.4); note = (note + 1) % melody.length; }
-function startMusic(){ setupAudio(); audioContext.resume(); playing = true; document.querySelector(".music").classList.add("playing"); text("musicStatus", "Playing softly"); playNote(); timer = setInterval(playNote, 900); }
-function stopMusic(){ playing = false; clearInterval(timer); document.querySelector(".music").classList.remove("playing"); text("musicStatus", "Tap to play"); }
-document.getElementById("musicToggle").addEventListener("click", () => playing ? stopMusic() : startMusic());
-
-function openCard(){ const opening = document.getElementById("opening"); if(opening.classList.contains("opening-now")) return; opening.classList.add("opening-now"); document.getElementById("openCard").textContent = "Opening..."; setTimeout(() => { opening.classList.add("hidden"); document.body.classList.remove("locked"); if(!playing) startMusic(); }, 3100); }
+function openCard(){ const opening = document.getElementById("opening"); if(opening.classList.contains("opening-now")) return; opening.classList.add("opening-now"); document.getElementById("openCard").textContent = "Opening..."; setTimeout(() => { opening.classList.add("hidden"); document.body.classList.remove("locked"); }, 3100); }
 document.getElementById("openCard").addEventListener("click", (event) => { event.stopPropagation(); openCard(); });
 document.getElementById("opening").addEventListener("click", openCard);
 
@@ -182,4 +240,6 @@ fillEditor();
 applyData();
 updateCountdown();
 setInterval(updateCountdown, 1000);
+
+
 
