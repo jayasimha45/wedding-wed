@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=18" />
+  <link rel="stylesheet" href="styles.css?v=19" />
 </head>
 <body class="locked">
   <section class="opening" id="opening">
@@ -31,8 +31,9 @@
       </div>
       <div class="online-save">
         <strong>Share invitation</strong>
-        <small>After editing, copy this link and send it to family and friends.</small>
-        <button class="gold-btn" id="copyShareLink" type="button">Copy share link</button>
+        <small>After editing, save latest online. The same guest link and QR will update.</small>
+        <button class="gold-btn" id="saveLatestOnline" type="button">Save latest online</button>
+        <button class="plain-btn" id="copyShareLink" type="button">Copy guest link</button>
         <button class="plain-btn" id="showQrCode" type="button">Show QR scanner</button>
         <div class="qr-share" id="qrShare" hidden>
           <img id="qrImage" alt="Wedding invitation QR scanner" />
@@ -169,7 +170,8 @@
   </aside>
 
   <footer><p class="eyebrow">Thank you</p><h2>We look forward to celebrating with you</h2><p id="footerText"></p></footer>
-  <script src="app.js?v=18"></script>
+  <script src="app.js?v=19"></script>
+  <script type="module" src="latest-online.js?v=19"></script>
 </body>
 </html>
 
