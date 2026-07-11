@@ -106,6 +106,7 @@ function applyData() {
   document.getElementById("whatsappLink").href = `https://wa.me/${phone}?text=${message}`;
   document.getElementById("callLink").href = `tel:${(data.groomPhone || data.bridePhone).replace(/\s/g, "")}`;
   applyMusic();
+  updateGuestQrCard();
 }
 
 function applyCouplePhotos() {
@@ -342,10 +343,19 @@ const showQrButton = document.getElementById("showQrCode");
 const qrShare = document.getElementById("qrShare");
 const qrImage = document.getElementById("qrImage");
 const downloadQr = document.getElementById("downloadQr");
+const guestQrImage = document.getElementById("guestQrImage");
+const guestQrOpen = document.getElementById("guestQrOpen");
 const onlineStatus = document.getElementById("onlineStatus");
 
 function qrImageUrl(link) {
   return `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&data=${encodeURIComponent(link)}`;
+}
+
+function updateGuestQrCard() {
+  const link = makeQuickShareLink();
+  const imageUrl = qrImageUrl(link);
+  if (guestQrImage) guestQrImage.src = imageUrl;
+  if (guestQrOpen) guestQrOpen.href = imageUrl;
 }
 
 function showQrForCurrentInvitation() {
@@ -390,6 +400,7 @@ window.weddingApp = {
 
 loadQuickShareFromUrl();
 setupAdminAccess();
+updateGuestQrCard();
 fillEditor();
 applyData();
 updateCountdown();
