@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=16" />
+  <link rel="stylesheet" href="styles.css?v=17" />
 </head>
 <body class="locked">
   <section class="opening" id="opening">
@@ -112,7 +112,15 @@
       <h2>You are invited to our royal celebration</h2>
       <p id="messageText"></p>
     </section>
-
+    <section class="card-section guest-qr-card" id="share-card">
+      <p class="eyebrow">Share invitation</p>
+      <h2>Scan to open this wedding invitation</h2>
+      <div class="guest-qr-box">
+        <img id="guestQrImage" alt="Wedding invitation QR scanner" />
+        <a class="gold-btn" id="guestQrOpen" href="#" target="_blank" rel="noopener">Open QR image</a>
+      </div>
+      <p>Guests can scan this QR code to open and share the invitation.</p>
+    </section>
     <section class="section" id="events">
       <p class="eyebrow">Wedding festivities</p>
       <h2>Celebration schedule</h2>
@@ -161,7 +169,7 @@
   </aside>
 
   <footer><p class="eyebrow">Thank you</p><h2>We look forward to celebrating with you</h2><p id="footerText"></p></footer>
-  <script src="app.js?v=16"></script>
+  <script src="app.js?v=17"></script>
 </body>
 </html>
 
