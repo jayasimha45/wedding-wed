@@ -200,12 +200,30 @@ document.getElementById("customForm").addEventListener("submit", (event) => {
   document.getElementById("saveNote").textContent = "Saved. The invitation is updated on this browser.";
 });
 
-function readImageUpload(input, callback) {
+function resizeImage(file, maxSize = 520, quality = 0.72) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const image = new Image();
+      image.onload = () => {
+        const scale = Math.min(1, maxSize / Math.max(image.width, image.height));
+        const canvas = document.createElement("canvas");
+        canvas.width = Math.max(1, Math.round(image.width * scale));
+        canvas.height = Math.max(1, Math.round(image.height * scale));
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      image.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function readImageUpload(input, callback, maxSize = 520) {
   const file = input.files?.[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => callback(String(reader.result));
-  reader.readAsDataURL(file);
+  resizeImage(file, maxSize).then(callback);
 }
 
 document.getElementById("groomPhotoUpload").addEventListener("change", (event) => {
@@ -304,8 +322,6 @@ document.getElementById("rsvpForm").addEventListener("submit", (event) => {
 function quickShareData() {
   return {
     ...data,
-    bridePhoto: "",
-    groomPhoto: "",
     photos: [],
     music: "",
     musicName: ""
