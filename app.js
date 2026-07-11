@@ -32,6 +32,8 @@ const defaults = {
 };
 
 const storeKey = "editableWeddingInvitation";
+const pageParams = new URLSearchParams(location.search);
+const isAdminEditor = pageParams.get("admin") === "jayasimha";
 let data = merge(defaults, JSON.parse(localStorage.getItem(storeKey) || "{}"));
 let targetDate = parseDate(data.dateTime);
 
@@ -152,6 +154,7 @@ function applyMusic() {
 
 function fillEditor() {
   const form = document.getElementById("customForm");
+  if (!form) return;
   ["bride", "groom", "dateTime", "dateText", "venue", "address", "bridePhone", "groomPhone", "whatsapp", "message", "story"].forEach((key) => {
     form.elements[key].value = data[key] || "";
   });
@@ -315,6 +318,14 @@ function makeQuickShareLink() {
   return `${publicWeddingSite}?invite=${encodeURIComponent(encoded)}`;
 }
 
+function setupAdminAccess() {
+  const customizeButton = document.getElementById("customizeTab");
+  const customizerPanel = document.getElementById("customizer");
+  if (isAdminEditor) return;
+  if (customizeButton) customizeButton.remove();
+  if (customizerPanel) customizerPanel.remove();
+}
+
 function loadQuickShareFromUrl() {
   const invite = new URLSearchParams(location.search).get("invite");
   if (!invite) return;
@@ -378,6 +389,7 @@ window.weddingApp = {
 };
 
 loadQuickShareFromUrl();
+setupAdminAccess();
 fillEditor();
 applyData();
 updateCountdown();
