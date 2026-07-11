@@ -327,16 +327,37 @@ function loadQuickShareFromUrl() {
 }
 
 const copyShareButton = document.getElementById("copyShareLink");
+const showQrButton = document.getElementById("showQrCode");
+const qrShare = document.getElementById("qrShare");
+const qrImage = document.getElementById("qrImage");
+const downloadQr = document.getElementById("downloadQr");
 const onlineStatus = document.getElementById("onlineStatus");
+
+function qrImageUrl(link) {
+  return `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=18&data=${encodeURIComponent(link)}`;
+}
+
+function showQrForCurrentInvitation() {
+  const link = makeQuickShareLink();
+  const imageUrl = qrImageUrl(link);
+  if (qrImage) qrImage.src = imageUrl;
+  if (downloadQr) downloadQr.href = imageUrl;
+  if (qrShare) qrShare.hidden = false;
+  if (onlineStatus) onlineStatus.textContent = "QR scanner is ready. Send this QR image or let people scan it.";
+}
+
 copyShareButton?.addEventListener("click", async () => {
   const link = makeQuickShareLink();
+  showQrForCurrentInvitation();
   try {
     await navigator.clipboard.writeText(link);
-    if (onlineStatus) onlineStatus.textContent = "Share link copied. Send it to family and friends.";
+    if (onlineStatus) onlineStatus.textContent = "Share link copied. QR scanner is also ready.";
   } catch (error) {
-    if (onlineStatus) onlineStatus.textContent = link;
+    if (onlineStatus) onlineStatus.textContent = "QR scanner is ready. Link is shown inside the QR.";
   }
 });
+
+showQrButton?.addEventListener("click", showQrForCurrentInvitation);
 
 function openCard(){ const opening = document.getElementById("opening"); if(opening.classList.contains("opening-now")) return; opening.classList.add("opening-now"); document.getElementById("openCard").textContent = "Opening..."; setTimeout(() => { opening.classList.add("hidden"); document.body.classList.remove("locked"); }, 3100); }
 document.getElementById("openCard").addEventListener("click", (event) => { event.stopPropagation(); openCard(); });
