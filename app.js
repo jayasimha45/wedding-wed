@@ -331,6 +331,10 @@ function quickShareData() {
 const publicWeddingSite = "https://jayasimha45.github.io/wedding-wed/";
 
 function makeQuickShareLink() {
+  return publicWeddingSite;
+}
+
+function makeBackupShareLink() {
   const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(quickShareData()))));
   return `${publicWeddingSite}?invite=${encodeURIComponent(encoded)}`;
 }
@@ -380,7 +384,7 @@ function showQrForCurrentInvitation() {
   if (qrImage) qrImage.src = imageUrl;
   if (downloadQr) downloadQr.href = imageUrl;
   if (qrShare) qrShare.hidden = false;
-  if (onlineStatus) onlineStatus.textContent = "QR scanner is ready. Send this QR image or let people scan it.";
+  if (onlineStatus) onlineStatus.textContent = "QR scanner is ready. It opens the latest saved invitation.";
 }
 
 copyShareButton?.addEventListener("click", async () => {
@@ -388,9 +392,9 @@ copyShareButton?.addEventListener("click", async () => {
   showQrForCurrentInvitation();
   try {
     await navigator.clipboard.writeText(link);
-    if (onlineStatus) onlineStatus.textContent = "Share link copied. QR scanner is also ready.";
+    if (onlineStatus) onlineStatus.textContent = "Guest link copied. It always opens the latest saved invitation.";
   } catch (error) {
-    if (onlineStatus) onlineStatus.textContent = "QR scanner is ready. Link is shown inside the QR.";
+    if (onlineStatus) onlineStatus.textContent = link;
   }
 });
 
@@ -411,7 +415,8 @@ window.weddingApp = {
   },
   saveLocal: save,
   applyData,
-  updateCountdown
+  updateCountdown,
+  makeBackupShareLink
 };
 
 loadQuickShareFromUrl();
