@@ -138,7 +138,7 @@ function renderRegistry() {
 }
 
 async function saveRegistry() {
-  const response = await fetch(registryDocUrl, {
+  const response = await window.weddingAdminAuth.authFetch(registryDocUrl, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -185,7 +185,7 @@ saveButton?.addEventListener("click", async () => {
     const title = invitationTitle(invitation);
     window.weddingApp?.setData?.(invitation);
 
-    const response = await fetch(currentInvitationId ? invitationDocUrl(currentInvitationId) : legacyDocUrl, {
+    const response = await window.weddingAdminAuth.authFetch(currentInvitationId ? invitationDocUrl(currentInvitationId) : legacyDocUrl, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -251,7 +251,7 @@ deleteInvitationButton?.addEventListener("click", async () => {
 
   try {
     setStatus("Deleting invitation...");
-    const response = await fetch(invitationDocUrl(id), { method: "DELETE" });
+    const response = await window.weddingAdminAuth.authFetch(invitationDocUrl(id), { method: "DELETE" });
     if (!response.ok && response.status !== 404) throw new Error(`delete-${response.status}`);
     invitationRegistry = invitationRegistry.filter((entry) => entry.id !== id);
     await saveRegistry();
@@ -264,7 +264,11 @@ deleteInvitationButton?.addEventListener("click", async () => {
 });
 
 async function initializeOnlineInvitations() {
-  await loadRegistry();
+  if (isAdmin) {
+    const authorized = await window.weddingAdminAuth?.ready;
+    if (!authorized) return;
+    await loadRegistry();
+  }
   await loadLatestOnline();
 }
 

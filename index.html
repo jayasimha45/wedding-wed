@@ -8,8 +8,29 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css?v=20" />
+  <style>
+    .admin-login-dialog{width:min(430px,calc(100% - 28px));border:1px solid rgba(201,154,62,.45);border-radius:18px;padding:0;background:#fffdf8;box-shadow:0 30px 90px rgba(39,7,12,.35)}
+    .admin-login-dialog::backdrop{background:rgba(39,7,12,.72);backdrop-filter:blur(8px)}
+    .admin-login-dialog form{display:grid;gap:14px;padding:26px}
+    .admin-login-dialog h2{margin:0;color:#65141f;font-size:2.2rem}
+    .admin-login-dialog p{margin:0}
+    .admin-login-dialog .login-error{color:#8b1422;font-weight:800}
+  </style>
 </head>
 <body class="locked">
+  <dialog class="admin-login-dialog" id="adminLoginDialog">
+    <form id="adminLoginForm">
+      <p class="eyebrow">Protected administration</p>
+      <h2>Admin sign in</h2>
+      <p>Sign in to create, edit, save or delete wedding invitations.</p>
+      <label>Email<input id="adminEmail" type="email" autocomplete="username" value="kjayasimha2003@gmail.com" required /></label>
+      <label>Password<input id="adminPassword" type="password" autocomplete="current-password" required /></label>
+      <button class="gold-btn" type="submit">Sign in securely</button>
+      <button class="plain-btn" id="resetAdminPassword" type="button">Send password reset email</button>
+      <p class="login-error" id="adminLoginStatus"></p>
+    </form>
+  </dialog>
+
   <section class="opening" id="opening">
     <div class="curtain left"></div>
     <div class="curtain right"></div>
@@ -39,6 +60,7 @@
           <label>New invitation name<input id="newInvitationName" placeholder="Bride & Groom" /></label>
           <button class="gold-btn" id="createInvitation" type="button">Create new invitation</button>
           <button class="plain-btn" id="deleteInvitation" type="button">Delete selected invitation</button>
+          <button class="plain-btn" id="signOutAdmin" type="button">Sign out</button>
         </div>
         <button class="gold-btn" id="saveLatestOnline" type="button">Save latest online</button>
         <button class="plain-btn" id="copyShareLink" type="button">Copy guest link</button>
@@ -178,8 +200,9 @@
   </aside>
 
   <footer><p class="eyebrow">Thank you</p><h2>We look forward to celebrating with you</h2><p id="footerText"></p></footer>
-  <script src="app.js?v=28"></script>
-  <script type="module" src="latest-online.js?v=28"></script>
+  <script src="app.js?v=29"></script>
+  <script src="admin-auth.js?v=29"></script>
+  <script type="module" src="latest-online.js?v=29"></script>
 </body>
 </html>
 
