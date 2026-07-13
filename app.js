@@ -31,7 +31,7 @@ const defaults = {
     "assets/gallery/sangeet.jpeg",
     "assets/gallery/reception.jpeg"
   ],
-  weddingPhoto: "assets/gallery/wedding.jpeg",
+  weddingPhoto: "assets/gallery/wedding-v2.jpeg",
   music: "",
   musicName: "",
   groomPhoto: "",
