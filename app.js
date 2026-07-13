@@ -41,10 +41,13 @@ const defaults = {
   bridePhoto: ""
 };
 
-const storeKey = "editableWeddingInvitation";
 const pageParams = new URLSearchParams(location.search);
+const weddingInvitationId = pageParams.get("wedding") || "main";
+const storeKey = `editableWeddingInvitation:${weddingInvitationId}`;
+const legacyStoreKey = "editableWeddingInvitation";
+const savedLocalData = localStorage.getItem(storeKey) || (weddingInvitationId === "main" ? localStorage.getItem(legacyStoreKey) : null) || "{}";
 const isAdminEditor = pageParams.get("admin") === "jayasimha";
-let data = merge(defaults, JSON.parse(localStorage.getItem(storeKey) || "{}"));
+let data = merge(defaults, JSON.parse(savedLocalData));
 let targetDate = parseDate(data.dateTime);
 
 function merge(base, saved) {
@@ -119,7 +122,7 @@ function applyData() {
   document.getElementById("mapFrame").src = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
 
   const phone = data.whatsapp.replace(/[^0-9]/g, "");
-  const websiteLink = "https://jayasimha45.github.io/wedding-wed/";
+  const websiteLink = makeQuickShareLink();
   const message = encodeURIComponent(`You are invited to ${couple}'s wedding at ${data.venue} on ${data.dateText}. Open the wedding website: ${websiteLink}`);
   document.getElementById("whatsappLink").href = `https://wa.me/${phone}?text=${message}`;
   document.getElementById("callLink").href = `tel:${(data.groomPhone || data.bridePhone).replace(/\s/g, "")}`;
@@ -370,7 +373,8 @@ function quickShareData() {
 const publicWeddingSite = "https://jayasimha45.github.io/wedding-wed/";
 
 function makeQuickShareLink() {
-  return publicWeddingSite;
+  if (weddingInvitationId === "main") return publicWeddingSite;
+  return `${publicWeddingSite}?wedding=${encodeURIComponent(weddingInvitationId)}`;
 }
 
 function makeBackupShareLink() {

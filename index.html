@@ -31,7 +31,15 @@
       </div>
       <div class="online-save">
         <strong>Share invitation</strong>
-        <small>After editing, save latest online. The same guest link and QR will update.</small>
+        <small>Each saved wedding can have its own permanent guest link and QR.</small>
+        <div class="mini-list" id="invitationManager" hidden>
+          <label>Saved invitations<select id="invitationSelect"></select></label>
+          <button class="plain-btn" id="openInvitationAdmin" type="button">Open selected invitation</button>
+          <button class="plain-btn" id="copySelectedGuestLink" type="button">Copy selected guest link</button>
+          <label>New invitation name<input id="newInvitationName" placeholder="Bride & Groom" /></label>
+          <button class="gold-btn" id="createInvitation" type="button">Create new invitation</button>
+          <button class="plain-btn" id="deleteInvitation" type="button">Delete selected invitation</button>
+        </div>
         <button class="gold-btn" id="saveLatestOnline" type="button">Save latest online</button>
         <button class="plain-btn" id="copyShareLink" type="button">Copy guest link</button>
         <button class="plain-btn" id="showQrCode" type="button">Show QR scanner</button>
@@ -170,8 +178,8 @@
   </aside>
 
   <footer><p class="eyebrow">Thank you</p><h2>We look forward to celebrating with you</h2><p id="footerText"></p></footer>
-  <script src="app.js?v=27"></script>
-  <script type="module" src="latest-online.js?v=26"></script>
+  <script src="app.js?v=28"></script>
+  <script type="module" src="latest-online.js?v=28"></script>
 </body>
 </html>
 
