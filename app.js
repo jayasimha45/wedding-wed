@@ -31,6 +31,7 @@ const defaults = {
     "assets/gallery/sangeet.jpeg",
     "assets/gallery/reception.jpeg"
   ],
+  weddingPhoto: "assets/gallery/wedding.jpeg",
   music: "",
   musicName: "",
   groomPhoto: "",
@@ -50,6 +51,7 @@ function merge(base, saved) {
     events: base.events.map((row, i) => saved.events?.[i] || row),
     family: base.family.map((row, i) => saved.family?.[i] || row),
     photos: base.photos.map((photo, i) => saved.photos?.[i] || photo),
+    weddingPhoto: saved.weddingPhoto || base.weddingPhoto,
     music: saved.music || base.music,
     musicName: saved.musicName || base.musicName,
     groomPhoto: saved.groomPhoto || base.groomPhoto,
@@ -94,7 +96,7 @@ function applyData() {
   const eventGrid = document.getElementById("eventGrid");
   eventGrid.innerHTML = data.events.map((event, i) => {
     const photoIndex = eventPhotoIndexes[i];
-    const photo = photoIndex === null ? "" : data.photos[photoIndex];
+    const photo = i === 4 ? data.weddingPhoto : data.photos[photoIndex];
     const background = photo ? ` style="background-image:linear-gradient(180deg,rgba(43,8,14,.35),rgba(43,8,14,.82)),url('${photo}');background-size:cover;background-position:center"` : "";
     const highlighted = photo || i === 4 ? "featured" : "";
     return `<article class="event-card ${highlighted}"${background}><span>${event[0]}</span><h3>${event[1]}</h3><p>${event[2]}</p><p>${event[3]}</p></article>`;
