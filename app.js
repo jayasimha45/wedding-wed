@@ -90,8 +90,15 @@ function applyData() {
   text("bridePhotoName", data.bride);
   applyCouplePhotos();
 
+  const eventPhotoIndexes = [0, 1, 2, 3, null, 4];
   const eventGrid = document.getElementById("eventGrid");
-  eventGrid.innerHTML = data.events.map((event, i) => `<article class="event-card ${i === 4 ? "featured" : ""}"><span>${event[0]}</span><h3>${event[1]}</h3><p>${event[2]}</p><p>${event[3]}</p></article>`).join("");
+  eventGrid.innerHTML = data.events.map((event, i) => {
+    const photoIndex = eventPhotoIndexes[i];
+    const photo = photoIndex === null ? "" : data.photos[photoIndex];
+    const background = photo ? ` style="background-image:linear-gradient(180deg,rgba(43,8,14,.35),rgba(43,8,14,.82)),url('${photo}');background-size:cover;background-position:center"` : "";
+    const highlighted = photo || i === 4 ? "featured" : "";
+    return `<article class="event-card ${highlighted}"${background}><span>${event[0]}</span><h3>${event[1]}</h3><p>${event[2]}</p><p>${event[3]}</p></article>`;
+  }).join("");
 
   const familyGrid = document.getElementById("familyGrid");
   familyGrid.innerHTML = data.family.map((member) => `<article class="family-card"><span>${member[0]}</span><strong>${member[1]}</strong></article>`).join("");
