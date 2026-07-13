@@ -1,3 +1,12 @@
+const permanentSchedulePhotos = [
+  "assets/gallery/engagement.jpeg",
+  "assets/gallery/mehendi.jpeg",
+  "assets/gallery/haldi.jpeg",
+  "assets/gallery/sangeet.jpeg",
+  "assets/gallery/reception.jpeg"
+];
+const permanentWeddingPhoto = "assets/gallery/wedding-v2.jpeg";
+
 const defaults = {
   bride: "Meera",
   groom: "Aarav",
@@ -24,14 +33,8 @@ const defaults = {
     ["Groom's Sibling", "Rhea Sharma"],
     ["Bride's Sibling", "Arjun Rao"]
   ],
-  photos: [
-    "assets/gallery/engagement.jpeg",
-    "assets/gallery/mehendi.jpeg",
-    "assets/gallery/haldi.jpeg",
-    "assets/gallery/sangeet.jpeg",
-    "assets/gallery/reception.jpeg"
-  ],
-  weddingPhoto: "assets/gallery/wedding-v2.jpeg",
+  photos: [...permanentSchedulePhotos],
+  weddingPhoto: permanentWeddingPhoto,
   music: "",
   musicName: "",
   groomPhoto: "",
@@ -96,7 +99,7 @@ function applyData() {
   const eventGrid = document.getElementById("eventGrid");
   eventGrid.innerHTML = data.events.map((event, i) => {
     const photoIndex = eventPhotoIndexes[i];
-    const photo = i === 4 ? data.weddingPhoto : data.photos[photoIndex];
+    const photo = i === 4 ? permanentWeddingPhoto : permanentSchedulePhotos[photoIndex];
     const background = photo ? ` style="background-image:linear-gradient(180deg,rgba(43,8,14,.35),rgba(43,8,14,.82)),url('${photo}');background-size:cover;background-position:center"` : "";
     const highlighted = photo || i === 4 ? "featured" : "";
     return `<article class="event-card ${highlighted}"${background}><span>${event[0]}</span><h3>${event[1]}</h3><p>${event[2]}</p><p>${event[3]}</p></article>`;
