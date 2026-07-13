@@ -42,6 +42,8 @@ function latestData() {
   const data = editorData(current);
   return {
     ...data,
+    photos: Array.isArray(current.photos) ? current.photos : [],
+    weddingPhoto: current.weddingPhoto || data.weddingPhoto || "",
     music: "",
     musicName: ""
   };
