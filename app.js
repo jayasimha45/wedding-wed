@@ -24,7 +24,13 @@ const defaults = {
     ["Groom's Sibling", "Rhea Sharma"],
     ["Bride's Sibling", "Arjun Rao"]
   ],
-  photos: ["", "", "", "", ""],
+  photos: [
+    "assets/gallery/engagement.jpeg",
+    "assets/gallery/mehendi.jpeg",
+    "assets/gallery/haldi.jpeg",
+    "assets/gallery/sangeet.jpeg",
+    "assets/gallery/reception.jpeg"
+  ],
   music: "",
   musicName: "",
   groomPhoto: "",
@@ -174,7 +180,8 @@ function fillEditor() {
       <label>Name<input name="family-${i}-1" value="${member[1]}"></label>
     </div>`).join("");
 
-  document.getElementById("photoEditor").innerHTML = ["Engagement", "Mehendi", "Haldi", "Sangeet", "Reception"].map((name, i) => `<label>${name} photo<input type="file" accept="image/*" data-photo="${i}"></label>`).join("");
+  const photoNames = ["Engagement", "Mehendi", "Haldi", "Sangeet", "Reception"];
+  document.getElementById("photoEditor").innerHTML = `<label class="wide">Upload all five photos<input type="file" accept="image/*" multiple data-photo-all></label>` + photoNames.map((name, i) => `<label>${name} photo<input type="file" accept="image/*" data-photo="${i}"></label>`).join("");
 }
 
 function updateCountdown() {
@@ -293,16 +300,36 @@ weddingAudio.addEventListener("pause", () => {
   document.getElementById("musicStatus").textContent = "Tap to play";
 });
 
- document.getElementById("photoEditor").addEventListener("change", (event) => {
-  const input = event.target;
-  if (!input.matches("input[type='file']") || !input.files[0]) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    data.photos[Number(input.dataset.photo)] = String(reader.result);
+function saveGalleryPhotos(message) {
+  try {
     save();
     applyData();
-  };
-  reader.readAsDataURL(input.files[0]);
+    document.getElementById("saveNote").textContent = message;
+  } catch (error) {
+    console.error("Photo save failed", error);
+    document.getElementById("saveNote").textContent = "The photos could not be saved. Please choose smaller images.";
+  }
+}
+
+document.getElementById("photoEditor").addEventListener("change", (event) => {
+  const input = event.target;
+  if (!input.matches("input[type='file']")) return;
+  const files = Array.from(input.files || []).slice(0, 5);
+  if (!files.length) return;
+
+  if (input.hasAttribute("data-photo-all")) {
+    Promise.all(files.map((file) => resizeImage(file, 700))).then((images) => {
+      images.forEach((image, index) => data.photos[index] = image);
+      saveGalleryPhotos(`${images.length} photos added. Click Save latest online to show them on the guest link.`);
+    });
+    return;
+  }
+
+  const photoNumber = Number(input.dataset.photo);
+  readImageUpload(input, (image) => {
+    data.photos[photoNumber] = image;
+    saveGalleryPhotos("Photo added. Click Save latest online to show it on the guest link.");
+  }, 700);
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {

@@ -42,7 +42,6 @@ function latestData() {
   const data = editorData(current);
   return {
     ...data,
-    photos: [],
     music: "",
     musicName: ""
   };
