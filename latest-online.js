@@ -180,8 +180,8 @@ async function loadLatestOnline() {
 saveButton?.addEventListener("click", async () => {
   if (!isAdmin) return;
   try {
-    setStatus("Saving this invitation online...");
-    const invitation = latestData();
+    setStatus("Preparing phone photos and saving online...");
+    const invitation = await window.weddingMobileSave.compact(latestData());
     const title = invitationTitle(invitation);
     window.weddingApp?.setData?.(invitation);
 
@@ -204,7 +204,7 @@ saveButton?.addEventListener("click", async () => {
     setStatus(`Saved online. This wedding has its own permanent guest link and QR.`);
   } catch (error) {
     console.error("Online invitation save failed", error);
-    setStatus("Could not save online. Please try again.");
+    setStatus(window.weddingMobileSave.message(error));
   }
 });
 

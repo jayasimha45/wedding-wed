@@ -117,10 +117,17 @@
   }
 
   async function authFetch(url, options = {}) {
-    const token = await getValidToken();
+    let token = await getValidToken();
     const headers = new Headers(options.headers || {});
     headers.set("Authorization", `Bearer ${token}`);
-    return fetch(url, { ...options, headers });
+    let response = await fetch(url, { ...options, headers });
+    if (response.status === 401) {
+      await refreshSession();
+      token = await getValidToken();
+      headers.set("Authorization", `Bearer ${token}`);
+      response = await fetch(url, { ...options, headers });
+    }
+    return response;
   }
 
   async function sendPasswordReset(email = adminEmailAddress) {
