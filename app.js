@@ -443,9 +443,25 @@ copyShareButton?.addEventListener("click", async () => {
 
 showQrButton?.addEventListener("click", showQrForCurrentInvitation);
 
-function openCard(){ const opening = document.getElementById("opening"); if(opening.classList.contains("opening-now")) return; opening.classList.add("opening-now"); document.getElementById("openCard").textContent = "Opening..."; setTimeout(() => { opening.classList.add("hidden"); document.body.classList.remove("locked"); }, 3100); }
+const openingAutoDelay = 150;
+const openingDuration = 2750;
+
+function openCard() {
+  const opening = document.getElementById("opening");
+  if (opening.classList.contains("opening-now")) return;
+  opening.querySelectorAll(".curtain").forEach((curtain) => {
+    curtain.style.transitionDuration = "2.35s";
+  });
+  opening.classList.add("opening-now");
+  document.getElementById("openCard").textContent = "Opening automatically...";
+  setTimeout(() => {
+    opening.classList.add("hidden");
+    document.body.classList.remove("locked");
+  }, openingDuration);
+}
 document.getElementById("openCard").addEventListener("click", (event) => { event.stopPropagation(); openCard(); });
 document.getElementById("opening").addEventListener("click", openCard);
+setTimeout(openCard, openingAutoDelay);
 
 window.weddingApp = {
   getData: () => data,
